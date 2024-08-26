@@ -19,10 +19,12 @@ require("lazy").setup({
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "lazyvim.plugins.extras.vscode" },
-    --{ import = "lazyvim.plugins.extras.lang.json" },
-    { import = "lazyvim.plugins.extras.ui.mini-animate" },
+    --{ "navarasu/onedark.nvim", import = "onedark.nvim" },
+    --{ "goolord/alpha-nvim", import = 'alpha-nvim' },
+    --{ "dam9000/classic-copy-paste.nvim", import = "classic-copy-paste.nvim"},
+    --{ import = "lazyvim.plugins.extras.ui.mini-animate" },
     -- import/override with your plugins
-    { import = "plugins" },
+    { import = "plugins" }, --Load on plugins config in plugins folder
   },
   defaults = {
     -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
@@ -33,10 +35,10 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "tokyonight", "habamax", "material" } },
+  install = { colorscheme = { "material", "onedark" } }, --{ "tokyonight", "habamax", "material" } },
   checker = {
     enabled = true, -- check for plugin updates periodically
-    notify = false, -- notify on update
+    notify = true, -- notify on update
   }, -- automatically check for plugin updates
   performance = {
     rtp = {
