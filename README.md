@@ -86,14 +86,14 @@ Install the [Lazy Code](https://github.com/MinhCreator/lazyvim-config) with [Pow
   apk add git lazygit neovim ripgrep alpine-sdk --update
     git clone https://github.com/MinhCreator/lazyvim-config ~/.config/nvim
     cd ~/.config/nvim
-  nvim
-'
-  ```
+  nvim'
 
-  :::tip
+  ``` 
+  **Tip**:
+    It is recommended to run `:LazyHealth` after installation.
+    This will load all plugins and check if everything is working correctly.
 
-  It is recommended to run `:LazyHealth` after installation.
-  This will load all plugins and check if everything is working correctly.
+
 
 # ⚙️ Configuration
 
