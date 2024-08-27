@@ -79,7 +79,7 @@ return {
       dashboard.button("n", " " .. " New file",        "<cmd> ene | startinsert <cr>"),
       dashboard.button("f", " " .. " Search File",       "<cmd> lua LazyVim.pick()() <cr>"),
       dashboard.button("r", " " .. " Recent files",    "<cmd> lua LazyVim.pick('oldfiles')() <cr>"),
-      --dashboard.button("g", " " .. " Find text",       "<cmd> lua LazyVim.pick('live_grep')() <cr>"),
+      dashboard.button("g", " " .. " Find text",       "<cmd> lua LazyVim.pick('live_grep')() <cr>"),
       --dashboard.button("Z", " " .. " Open Directories", "<cmd> search_dirs<cr>"),
       dashboard.button("t", "T " .. " Terminal",    "<cmd> term <cr>"),
       dashboard.button("w", " " .. " Notification histories",    "<cmd> Telescope notify <cr>"),
