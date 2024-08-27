@@ -45,7 +45,7 @@ Install the [Lazy Code](https://github.com/MinhCreator/lazyvim-config)
 
 
 
-Install the [Lazy Code](https://github.com/MinhCreator/lazyvim-config) with [PowerShell](https://github.com/PowerShell/PowerShell)
+- Install the [Lazy Code](https://github.com/MinhCreator/lazyvim-config) for Windows via using [PowerShell](https://github.com/PowerShell/PowerShell)
 
 - Make a backup of your current Neovim files:
 
