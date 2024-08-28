@@ -4,6 +4,7 @@ return {
   { "ts-comments.nvim", enabled = false },
   { "friendly-snippets", enabled = false },
   { "dashboard-nvim", enabled = false },
-  --{ "mini.animate", enabled = false},
-  --{ "neo-tree.nvim", enabled = false},
+  { "gitsigns.nvim", enabled = false },
+  { "luvit-meta", enabled = false },
+  { "nvim-snippets", enabled = false },
 }
