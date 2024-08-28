@@ -8,13 +8,14 @@ return {
   { "nvim-lua/popup.nvim"},
   { "brenoprata10/nvim-highlight-colors" },
   { "stevearc/conform.nvim" },
-  { "mfussenegger/nvim-lint"},
+  { "mfussenegger/nvim-lint" },
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
   { "tpope/vim-repeat" },
   { "nvim-telescope/telescope-ui-select.nvim" },
   { "mg979/vim-visual-multi" },
   { "nvim-telescope/telescope-live-grep-args.nvim" },
   { import = "lazyvim.plugins.extras.vscode" },
+  { "nvim-neotest/nvim-nio" },
   -- change trouble config
   {
     "folke/trouble.nvim",
@@ -237,57 +238,28 @@ return {
       require("nvim-autopairs").setup()
     end,
   },
+
+  -- Add compiler
+  { -- This plugin
+  "Zeioth/compiler.nvim",
+  cmd = {"CompilerOpen", "CompilerToggleResults", "CompilerRedo"},
+  dependencies = { "stevearc/overseer.nvim", "nvim-telescope/telescope.nvim" },
+  opts = {},
+  },
   
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      {
-        "rcarriga/nvim-dap-ui",
-        "nvim-neotest/nvim-nio",
-        config = function(_, opts)
-          local dap = require("dap")
-          local dapui = require("dapui")
-          dap.set_log_level("INFO")
-          dapui.setup(opts)
-          dap.listeners.after.event_initialized["dapui_config"] = function()
-            dapui.open({})
-          end
-          dap.listeners.before.event_terminated["dapui_config"] = function()
-            dapui.close({})
-          end
-          dap.listeners.before.event_exited["dapui_config"] = function()
-            dapui.close({})
-          end
-        end,
+  { -- The task runner we use
+  "stevearc/overseer.nvim",
+  commit = "6271cab7ccc4ca840faa93f54440ffae3a3918bd",
+  cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
+  opts = {
+    task_list = {
+      direction = "bottom",
+      min_height = 25,
+      max_height = 25,
+      default_detail = 1
       },
     },
-  },
-  
-  {
-    "mfussenegger/nvim-dap-python",
-    config = function()
-      require("dap-python").setup("python")
-    end,
-  },
-  
-  {
-    {
-      "theHamsta/nvim-dap-virtual-text",
-      opts = {},
-    },
-    {
-      "jay-babu/mason-nvim-dap.nvim",
-      dependencies = "mason.nvim",
-      cmd = { "DapInstall", "DapUninstall" },
-      opts = {
-        automatic_installation = true,
-        handlers = {},
-        ensure_installed = {
-          "delve",
-        },
-      },
-    },
-  },
+  },  
 
   {
     "voldikss/vim-floaterm",
