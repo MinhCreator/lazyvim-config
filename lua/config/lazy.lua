@@ -18,21 +18,11 @@ require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    
-    --{ "navarasu/onedark.nvim", import = "onedark.nvim" },
-    --{ "goolord/alpha-nvim", import = 'alpha-nvim' },
-    --{ "dam9000/classic-copy-paste.nvim", import = "classic-copy-paste.nvim"},
-    --{ import = "lazyvim.plugins.extras.ui.mini-animate" },
-    -- import/override with your plugins
-    --{ import = "plugins" },
-    { import = "plugins/autocomplete_cmdline"}, --Load on plugins config in plugins folder
-    { import = "plugins/color_theme"},
-    { import = "plugins/core"},
-    { import = "plugins/disable_plugins"},
-    { import = "plugins/ui_menu"},
-
-
-
+    { import = "plugins/autocomplete_cmdline" }, --Load on plugins config in plugins folder
+    { import = "plugins/color_theme" },
+    { import = "plugins/core" },
+    { import = "plugins/disable_plugins" },
+    { import = "plugins/ui_menu" },
   },
   defaults = {
     -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.

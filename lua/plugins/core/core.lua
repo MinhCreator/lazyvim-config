@@ -1,11 +1,8 @@
-
-
-
 return {
- 
+
   -- add extras packages, and setup treesitter for json, json5 and jsonc
-  { import = "lazyvim.plugins.extras.lang.json" },
-  { "nvim-lua/popup.nvim"},
+  --{ import = "lazyvim.plugins.extras.lang.json" },
+  { "nvim-lua/popup.nvim" },
   { "brenoprata10/nvim-highlight-colors" },
   { "stevearc/conform.nvim" },
   { "mfussenegger/nvim-lint" },
@@ -72,7 +69,6 @@ return {
     },
   },
 
- 
   -- add more treesitter parsers
   {
     "nvim-treesitter/nvim-treesitter",
@@ -89,7 +85,6 @@ return {
     },
   },
 
-  
   -- the opts function can also be used to change the default opts:
   {
     "nvim-lualine/lualine.nvim",
@@ -113,8 +108,6 @@ return {
   -- use mini.starter instead of alpha
   --{ import = "lazyvim.plugins.extras.ui.mini-starter" },
 
-  
-
   -- Added python formatter
   {
     "williamboman/mason.nvim",
@@ -127,6 +120,7 @@ return {
         "shellcheck",
         "shfmt",
         "flake8",
+        "autopep8",
       },
     },
   },
@@ -180,14 +174,14 @@ return {
       })
     end,
   },
- 
+
   {
     "RRethy/vim-illuminate",
     config = function()
       require("illuminate")
     end,
   },
-  
+
   {
     "folke/flash.nvim",
     event = "VeryLazy",
@@ -241,25 +235,25 @@ return {
 
   -- Add compiler
   { -- This plugin
-  "Zeioth/compiler.nvim",
-  cmd = {"CompilerOpen", "CompilerToggleResults", "CompilerRedo"},
-  dependencies = { "stevearc/overseer.nvim", "nvim-telescope/telescope.nvim" },
-  opts = {},
+    "Zeioth/compiler.nvim",
+    cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
+    dependencies = { "stevearc/overseer.nvim", "nvim-telescope/telescope.nvim" },
+    opts = {},
   },
-  
+
   { -- The task runner we use
-  "stevearc/overseer.nvim",
-  commit = "6271cab7ccc4ca840faa93f54440ffae3a3918bd",
-  cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
-  opts = {
-    task_list = {
-      direction = "bottom",
-      min_height = 25,
-      max_height = 25,
-      default_detail = 1
+    "stevearc/overseer.nvim",
+    commit = "6271cab7ccc4ca840faa93f54440ffae3a3918bd",
+    cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
+    opts = {
+      task_list = {
+        direction = "bottom",
+        min_height = 25,
+        max_height = 25,
+        default_detail = 1,
       },
     },
-  },  
+  },
 
   {
     "voldikss/vim-floaterm",
@@ -275,4 +269,3 @@ return {
     end,
   },
 }
-

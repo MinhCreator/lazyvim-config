@@ -1,4 +1,3 @@
-
 -- initial gui app
 local is_neovide = false
 local use_noice = true
@@ -8,7 +7,6 @@ if vim.g.neovide then
 end
 vim.opt.lazyredraw = is_neovide
 return {
-  --{ "gelguy/wilder.nvim", enabled = not use_noice },
   {
     "folke/noice.nvim",
     lazy = true,
@@ -141,3 +139,4 @@ return {
     end,
   },
 }
+
