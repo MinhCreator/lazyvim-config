@@ -76,17 +76,18 @@ return {
     -- stylua: ignore
     dashboard.section.buttons.val = {
       --dashboard.button("p", " " .. " Open projects",    "<cmd> Telescope projects <cr>"),
-      dashboard.button("n", " " .. " New file",        "<cmd> ene | startinsert <cr>"),
+      dashboard.button("n", " " .. " New file",        "<cmd> ene | startinsert <cr>"),
       dashboard.button("f", " " .. " Search File",       "<cmd> lua LazyVim.pick()() <cr>"),
       dashboard.button("r", " " .. " Recent files",    "<cmd> lua LazyVim.pick('oldfiles')() <cr>"),
       dashboard.button("g", " " .. " Find text",       "<cmd> lua LazyVim.pick('live_grep')() <cr>"),
       --dashboard.button("Z", " " .. " Open Directories", "<cmd> search_dirs<cr>"),
-      dashboard.button("t", "T " .. " Terminal",    "<cmd> term <cr>"),
+      --dashboard.button("t", "T " .. " Terminal",    "<cmd> term <cr>"),
       dashboard.button("w", " " .. " Notification histories",    "<cmd> Telescope notify <cr>"),
-      dashboard.button("c", " " .. " Configure",          "<cmd> lua LazyVim.pick.config_files()() <cr>"),
-      dashboard.button("s", " " .. " Recovery Session", [[<cmd> lua require("persistence").load() <cr>]]),
+      --dashboard.button("c", " " .. " Configure",          "<cmd> lua LazyVim.pick.config_files()() <cr>"),
+      dashboard.button("c", " " .. " Configure",          "<cmd> lua LazyVim.pick.config_files()() <cr>"),
+      dashboard.button("s", " " .. " Recovery Session", [[<cmd> lua require("persistence").load() <cr>]]),
       dashboard.button("x", " " .. " Lazy Extras component",     "<cmd> LazyExtras <cr>"),
-      dashboard.button("l", "󰒲 " .. " Lazy Package Manager",            "<cmd> Lazy <cr>"),
+      dashboard.button("l", " " .. " Lazy Package Manager",            "<cmd> Lazy <cr>"),
       dashboard.button("q", " " .. " Quit( Exit )",            "<cmd> qa <cr>"),
     }
     vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#311B92" }) -- Dark Indigo
