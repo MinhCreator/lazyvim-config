@@ -15,7 +15,17 @@ vim.api.nvim_set_keymap(
   { noremap = true, silent = true }
 )
 
+vim.keymap.set("n", "<space>fb", ":Telescope file_browser<CR>")
+vim.keymap.set("n", "<space>n", ":Telescope resume<cr>")
+-- open file_browser with the path of the current buffer
+--vim.keymap.set("n", "<space>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
+
+-- Alternatively, using lua API
+vim.keymap.set("n", "<space>fb", function()
+  require("telescope").extensions.file_browser.file_browser()
+end)
+
 -- Toggle compiler results
 vim.api.nvim_set_keymap("n", "<S-F7>", "<cmd>CompilerToggleResults<cr>", { noremap = true, silent = true })
-
+--vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', {noremap = true})
 

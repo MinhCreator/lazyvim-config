@@ -7,12 +7,13 @@ return {
   { "stevearc/conform.nvim" },
   { "mfussenegger/nvim-lint" },
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-  { "tpope/vim-repeat" },
+  --{ "tpope/vim-repeat" },
   { "nvim-telescope/telescope-ui-select.nvim" },
   { "mg979/vim-visual-multi" },
   { "nvim-telescope/telescope-live-grep-args.nvim" },
   { import = "lazyvim.plugins.extras.vscode" },
   { "nvim-neotest/nvim-nio" },
+
   -- change trouble config
   {
     "folke/trouble.nvim",
@@ -95,15 +96,15 @@ return {
   },
 
   -- or you can return new options to override all the defaults
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function()
-      return {
-        --[[add your custom lualine config here]]
-      }
-    end,
-  },
+  --  {
+  --  "nvim-lualine/lualine.nvim",
+  --event = "VeryLazy",
+  --opts = function()
+  --return {
+  --[[add your custom lualine config here]]
+  --}
+  --end,
+  --},
 
   -- use mini.starter instead of alpha
   --{ import = "lazyvim.plugins.extras.ui.mini-starter" },
@@ -121,6 +122,7 @@ return {
         "shfmt",
         "flake8",
         "autopep8",
+        "gdtoolkit",
       },
     },
   },
@@ -166,14 +168,14 @@ return {
     },
   },
 
-  {
-    "nvim-treesitter/nvim-treesitter-context",
-    config = function()
-      require("treesitter-context").setup({
-        max_lines = 5,
-      })
-    end,
-  },
+  --{
+  --  "nvim-treesitter/nvim-treesitter-context",
+  --  config = function()
+  --    require("treesitter-context").setup({
+  --      max_lines = 5,
+  --    })
+  --  end,
+  --},
 
   {
     "RRethy/vim-illuminate",
@@ -197,14 +199,14 @@ return {
         },
       },
     },
-     -- stylua: ignore
-     keys = {
-       { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-       { "S",     mode = { "n" },           function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-       { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-       { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-       { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
-     },
+    -- stylua: ignore
+    keys = {
+      { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+      { "S",     mode = { "n" },           function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+      { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+      { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+    },
   },
 
   {
@@ -228,9 +230,28 @@ return {
 
   {
     "windwp/nvim-autopairs",
-    config = function()
-      require("nvim-autopairs").setup()
-    end,
+    event = "InsertEnter",
+    --config = function()
+    --  require("nvim-autopairs").setup()
+    --end,
+    opts = {
+      disable_filetype = { "TelescopePrompt", "spectre_panel" },
+      disable_in_macro = true, -- disable when recording or executing a macro
+      disable_in_visualblock = false, -- disable when insert after visual block mode
+      disable_in_replace_mode = true,
+      ignored_next_char = [=[[%w%%%'%[%"%.%`%$]]=],
+      enable_moveright = true,
+      enable_afterquote = true, -- add bracket pairs after quote
+      enable_check_bracket_line = true, --- check bracket in same line
+      enable_bracket_in_quote = true, --
+      enable_abbr = false, -- trigger abbreviation
+      break_undo = true, -- switch for basic rule break undo sequence
+      check_ts = false,
+      map_cr = true,
+      map_bs = true, -- map the <BS> key
+      map_c_h = false, -- Map the <C-h> key to delete a pair
+      map_c_w = false, -- map <c-w> to delete a pair if possible
+    },
   },
 
   -- Add compiler

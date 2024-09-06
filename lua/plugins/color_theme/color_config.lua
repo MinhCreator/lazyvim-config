@@ -4,9 +4,9 @@ return {
   "onedark.nvim",
   opts = {
     -- Main options --
-    style = "dark", -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-    transparent = true, -- Show/hide background
-    term_colors = false, -- Change terminal color as per the selected theme style
+    style = "darker", -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+    transparent = false, -- Show/hide background
+    term_colors = true, -- Change terminal color as per the selected theme style
     cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
 
     -- toggle theme style ---
@@ -36,7 +36,7 @@ return {
     -- Plugins Config --
     diagnostics = {
       darker = false, -- darker colors for diagnostic
-      undercurl = true, -- use undercurl instead of underline for diagnostics
+      undercurl = false, -- use undercurl instead of underline for diagnostics
       background = false, -- use background color for virtual text
     },
   },

@@ -17,15 +17,19 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
+    --{ "MinhCreator/load_plugin.nvim", import = "lazyvim.plugins" },
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    --{ import = "plugins"},
     { import = "plugins/autocomplete_cmdline" }, --Load on plugins config in plugins folder
     { import = "plugins/color_theme" },
     { import = "plugins/core" },
     { import = "plugins/disable_plugins" },
     { import = "plugins/ui_menu" },
     { import = "plugins/search" },
+    { import = "plugins/lang" },
+    { import = "plugins/lsp" },
   },
-  install = { colorscheme = { "onedark" } }, --{ "tokyonight", "habamax", "material" } },
+  install = { colorscheme = {} }, --{ "onedark" } }, --{ "tokyonight", "habamax", "material" } },
   checker = {
     enabled = false, -- check for plugin updates periodically
     notify = true, -- notify on update

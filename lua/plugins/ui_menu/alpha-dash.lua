@@ -76,7 +76,7 @@ return {
     -- stylua: ignore
     dashboard.section.buttons.val = {
       --dashboard.button("p", " " .. " Open projects",    "<cmd> Telescope projects <cr>"),
-      dashboard.button("n", " " .. " New file",        "<cmd> ene | startinsert <cr>"),
+      dashboard.button("n", " " .. " New file",        "<cmd> ene | startinsert <cr>"),
       dashboard.button("f", " " .. " Search File",       "<cmd> lua LazyVim.pick()() <cr>"),
       dashboard.button("r", " " .. " Recent files",    "<cmd> lua LazyVim.pick('oldfiles')() <cr>"),
       dashboard.button("g", " " .. " Find text",       "<cmd> lua LazyVim.pick('live_grep')() <cr>"),
@@ -90,10 +90,19 @@ return {
       dashboard.button("l", " " .. " Lazy Package Manager",            "<cmd> Lazy <cr>"),
       dashboard.button("q", " " .. " Quit( Exit )",            "<cmd> qa <cr>"),
     }
-    vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#311B92" }) -- Dark Indigo
+    --vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#311B92" }) -- Dark Indigo
     vim.api.nvim_set_hl(0, "AlphaButtons", { fg = "#D1C4E9" }) -- Light Purple
     vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#8BC34A" }) -- Greenish
-    vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#edd691" })
+    vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#6A9C89" }) --"#edd691" 6A9C89})
+
+    -- Footer
+    local function footer()
+      local total_plugins = require("lazy").stats().count
+      local version = vim.version()
+      local nvim_version_info = "  Neovim v" .. version.major .. "." .. version.minor .. "." .. version.patch
+
+      return " " .. total_plugins .. " plugins" .. nvim_version_info
+    end
 
     for _, button in ipairs(dashboard.section.buttons.val) do
       button.opts.hl = "AlphaButtons"
@@ -102,6 +111,8 @@ return {
     dashboard.section.header.opts.hl = "AlphaHeader"
     dashboard.section.buttons.opts.hl = "AlphaButtons"
     dashboard.section.footer.opts.hl = "AlphaFooter"
+    dashboard.section.footer.val = footer()
+    --dashboard.section.footer.opts.hl = "Constant"
     dashboard.opts.layout[1].val = 3
     return dashboard
   end,
@@ -120,21 +131,21 @@ return {
 
     require("alpha").setup(dashboard.opts)
 
-    vim.api.nvim_create_autocmd("User", {
-      once = true,
-      pattern = "LazyVimStarted",
-      callback = function()
-        local stats = require("lazy").stats()
-        local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-        dashboard.section.footer.val = "⚡ Lazy neovim loaded "
-          .. stats.loaded
-          .. "/"
-          .. stats.count
-          .. " plugins in "
-          .. ms
-          .. "ms"
-        pcall(vim.cmd.AlphaRedraw)
-      end,
-    })
+    --vim.api.nvim_create_autocmd("User", {
+    --  once = true,
+    --  pattern = "LazyVimStarted",
+    --  callback = function()
+    --    local stats = require("lazy").stats()
+    --    local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+    --    dashboard.section.footer.val = "⚡ Lazy neovim loaded "
+    --      .. stats.loaded
+    --      .. "/"
+    --      .. stats.count
+    --      .. " plugins in "
+    --      .. ms
+    --      .. "ms"
+    --    pcall(vim.cmd.AlphaRedraw)
+    --  end,
+    --})
   end,
 }
