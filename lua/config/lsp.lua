@@ -4,7 +4,7 @@ local keymap = vim.keymap
 local lsp = vim.lsp
 local diagnostic = vim.diagnostic
 
-local utils = require("plugins.utils")
+local utils = require("plugins/utils.utils")
 
 -- set quickfix list from diagnostics in a certain buffer, not the whole workspace
 local set_qflist = function(buf_num, severity)
@@ -12,7 +12,7 @@ local set_qflist = function(buf_num, severity)
   diagnostics = diagnostic.get(buf_num, { severity = severity })
 
   local qf_items = diagnostic.toqflist(diagnostics)
-  vim.fn.setqflist({}, " ", { title = "Diagnostics", items = qf_items })
+  vim.fn.setqflist({}, " ", { title = "  Diagnostics", items = qf_items })
 
   -- open quickfix by default
   vim.cmd([[copen]])
@@ -27,30 +27,40 @@ local custom_attach = function(client, bufnr)
     keymap.set(mode, l, r, opts)
   end
 
-  map("n", "gd", vim.lsp.buf.definition, { desc = "go to definition" })
-  map("n", "<C-]>", vim.lsp.buf.definition)
-  map("n", "K", vim.lsp.buf.hover)
-  map("n", "<C-k>", vim.lsp.buf.signature_help)
-  map("n", "<space>rn", vim.lsp.buf.rename, { desc = "varialbe rename" })
-  map("n", "gr", vim.lsp.buf.references, { desc = "show references" })
-  map("n", "[d", diagnostic.goto_prev, { desc = "previous diagnostic" })
-  map("n", "]d", diagnostic.goto_next, { desc = "next diagnostic" })
+  map("n", "gd", vim.lsp.buf.definition, { desc = "go to definition", noremap = true, silent = true })
+  --map("n", "<C-]>", vim.lsp.buf.definition, { noremap = true, silent = true, desc = "go to definition" })
+  map("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, desc = "show hover" })
+  map("n", "<C-k>", vim.lsp.buf.signature_help, { noremap = true, silent = true, desc = "show signature help" })
+  map("n", "<space>rn", vim.lsp.buf.rename, { desc = "varialbe rename", noremap = true, silent = true })
+  map("n", "gr", vim.lsp.buf.references, { desc = "show references", noremap = true, silent = true })
+  map("n", "[d", diagnostic.goto_prev, { desc = "previous diagnostic", noremap = true, silent = true })
+  map("n", "]d", diagnostic.goto_next, { desc = "next diagnostic", noremap = true, silent = true })
   -- this puts diagnostics from opened files to quickfix
-  map("n", "<space>qw", diagnostic.setqflist, { desc = "put window diagnostics to qf" })
+  map("n", "<space>qw", diagnostic.setqflist, { desc = "put window diagnostics to qf", noremap = true, silent = true })
   -- this puts diagnostics from current buffer to quickfix
   map("n", "<space>qb", function()
     set_qflist(bufnr)
-  end, { desc = "put buffer diagnostics to qf" })
-  map("n", "<space>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
-  map("n", "<space>wa", vim.lsp.buf.add_workspace_folder, { desc = "add workspace folder" })
-  map("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, { desc = "remove workspace folder" })
+  end, { desc = "put buffer diagnostics to qf", noremap = true, silent = true })
+  map("n", "<space>ca", vim.lsp.buf.code_action, { desc = "LSP code action", noremap = true, silent = true })
+  map(
+    "n",
+    "<space>wa",
+    vim.lsp.buf.add_workspace_folder,
+    { desc = "add workspace folder", noremap = true, silent = true }
+  )
+  map(
+    "n",
+    "<space>wr",
+    vim.lsp.buf.remove_workspace_folder,
+    { desc = "remove workspace folder", noremap = true, silent = true }
+  )
   map("n", "<space>wl", function()
     vim.print(vim.lsp.buf.list_workspace_folders())
-  end, { desc = "list workspace folder" })
+  end, { desc = "list workspace folder", noremap = true, silent = true })
 
   -- Set some key bindings conditional on server capabilities
   if client.server_capabilities.documentFormattingProvider then
-    map("n", "<space>f", vim.lsp.buf.format, { desc = "format code" })
+    map("n", "<space>f", vim.lsp.buf.format, { desc = "format code", noremap = true, silent = true })
   end
 
   api.nvim_create_autocmd("CursorHold", {
@@ -70,8 +80,8 @@ local custom_attach = function(client, bufnr)
 
       local cursor_pos = api.nvim_win_get_cursor(0)
       if
-        (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2])
-        and #diagnostic.get() > 0
+          (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2])
+          and #diagnostic.get() > 0
       then
         diagnostic.open_float(nil, float_opts)
       end
@@ -121,18 +131,18 @@ capabilities.textDocument.foldingRange = {
 
 local lspconfig = require("lspconfig")
 
-lspconfig.pylsp.setup({
+lspconfig.pyright.setup({
   on_attach = custom_attach,
   settings = {
-    pylsp = {
+    pyright = {
       plugins = {
         -- formatter options
         black = { enabled = true },
-        autopep8 = { enabled = false },
+        autopep8 = { enabled = true },
         yapf = { enabled = false },
         -- linter options
         pylint = { enabled = true, executable = "pylint" },
-        ruff = { enabled = false },
+        ruff = { enabled = true },
         pyflakes = { enabled = false },
         pycodestyle = { enabled = false },
         -- type checker
@@ -204,4 +214,3 @@ diagnostic.config({
 -- })
 
 -- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
-

@@ -2,7 +2,7 @@ local bufferline = require("bufferline")
 return {
   bufferline.setup({
     options = {
-      mode = "buffers", -- set to "tabs" to only show tabpages instead
+      mode = "buffers",                               -- set to "tabs" to only show tabpages instead
       style_preset = bufferline.style_preset.default, -- or bufferline.style_preset.minimal,
       --themable = true | false, -- allows highlight groups to be overriden i.e. sets highlights as default
       --numbers = "ordinal",
@@ -30,13 +30,13 @@ return {
         return s
       end,
 
-      --offsets = {
-      --{
-      --text_align = "center",
-      --separator = true,
-      --},
-      --},
-      color_icons = true, -- whether or not to add the filetype icon highlights
+      offsets = {
+        --{
+        text_align = "center",
+        --separator = true,
+        --},
+      },
+      color_icons = true,       -- whether or not to add the filetype icon highlights
 
       show_buffer_icons = true, -- disable filetype icons for buffers
       show_buffer_close_icons = true,

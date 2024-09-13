@@ -1,21 +1,86 @@
+math.randomseed(os.time())
+
+function pick_color()
+  local r = math.random(0, 255)
+  local g = math.random(0, 255)
+  local b = math.random(0, 255)
+  return string.format("#%02X%02X%02X", r, g, b)
+end
+
+function random_color()
+  local hex_col_def = "#"
+
+  for i = 1, 6 do
+    hex_col_def = hex_col_def .. string.format("%X", math.random(0, 15))
+  end
+
+  return hex_col_def
+end
+
+local function getGreeting(name)
+  local tableTime = os.date("*t")
+  local hour = tableTime.hour
+  local greetingsTable = {
+    [1] = "  Sleep well",
+    [2] = "  Good morning",
+    [3] = "  Good afternoon",
+    [4] = "  Good evening",
+    [5] = "󰖔 Good night",
+  }
+  local greetingIndex = 0
+  if hour == 23 or hour < 7 then
+    greetingIndex = 1
+  elseif hour < 12 then
+    greetingIndex = 2
+  elseif hour >= 12 and hour < 18 then
+    greetingIndex = 3
+  elseif hour >= 18 and hour < 21 then
+    greetingIndex = 4
+  elseif hour >= 21 then
+    greetingIndex = 5
+  end
+  return greetingsTable[greetingIndex] --{ fg = pick_color() }
+end
+
+local userName = "MinhCreatorVN"
+local greeting = "<|" .. getGreeting(userName) .. ", " .. userName .. "|>"
+
+local function check_greeting_color()
+  local gr = getGreeting(userName)
+
+  if gr == "  Sleep well" then
+    return "#F1B3BE"
+  elseif gr == "  Good morning" then
+    return "#FFE9A6"
+  elseif gr == "  Good afternoon" then
+    return "#F8AA27"
+  elseif gr == "  Good evening" then
+    return "#546BAB"
+  elseif gr == "󰖔 Good night" then
+    return "#2E4482"
+  end
+end
+
+--local color = pick_color()
+--
+
 return {
   "goolord/alpha-nvim",
   event = "VimEnter",
   enabled = true,
   init = false,
+
   opts = function()
     local dashboard = require("alpha.themes.dashboard")
     -- Define and set highlight groups for each logo line
-    vim.api.nvim_set_hl(0, "NeovimDashboardLogo1", { fg = "#EF476F" })
-    vim.api.nvim_set_hl(0, "NeovimDashboardLogo2", { fg = "#F78C6B" })
-    vim.api.nvim_set_hl(0, "NeovimDashboardLogo3", { fg = "#FFD166" })
-    vim.api.nvim_set_hl(0, "NeovimDashboardLogo4", { fg = "#06D6A0" })
-    vim.api.nvim_set_hl(0, "NeovimDashboardLogo5", { fg = "#118AB2" })
-    vim.api.nvim_set_hl(0, "NeovimDashboardLogo6", { fg = "#073B4C" })
-    --vim.api.nvim_set_hl(0, "NeovimDashboardLogo7", { fg = "#FFFFFF" })
-    --vim.api.nvim_set_hl(0, "NeovimDashboardLogo8", { fg = "#FFFFFF" })
-    --vim.api.nvim_set_hl(0, "NeovimDashboardLogo9", { fg = "#FFFFFF" })
-    vim.api.nvim_set_hl(0, "NeovimDashboardUsername", { fg = "#D1C4E9" })
+    vim.api.nvim_set_hl(0, "NeovimDashboardLogo1", { fg = "#EF476F" }) --{ fg = color }) --
+    vim.api.nvim_set_hl(0, "NeovimDashboardLogo2", { fg = "#F78C6B" }) --{ fg = color }) --
+    vim.api.nvim_set_hl(0, "NeovimDashboardLogo3", { fg = "#FFD166" }) --{ fg = color }) --
+    vim.api.nvim_set_hl(0, "NeovimDashboardLogo4", { fg = "#06D6A0" }) --{ fg = color }) --
+    vim.api.nvim_set_hl(0, "NeovimDashboardLogo5", { fg = "#118AB2" }) --{ fg = color }) --
+    vim.api.nvim_set_hl(0, "NeovimDashboardLogo6", { fg = "#073B4C" }) --{ fg = color }) --
+    vim.api.nvim_set_hl(0, "CodeEditor", { fg = "#fa3628" }) --{ fg = pick_color()  })
+    vim.api.nvim_set_hl(0, "getGreeting", { fg = check_greeting_color() })
     dashboard.section.header.type = "group"
     dashboard.section.header.val = {
       {
@@ -48,21 +113,21 @@ return {
         val = "   ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝        ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝  ",
         opts = { hl = "NeovimDashboardLogo6", shrink_margin = false, position = "center" },
       },
-      --{
-      --  type = "text",
-      --  val = " \/____/\/__/\/_/ \/____/ `/___/> \   \/____/\/___/  \/__,_ /\/____/",
-      --  opts = { hl = "NeovimDashboardLogo7", shrink_margin = false, position = "center"},
-      --},
-      --{
-      --  type = "text",
-      --  val = " /\___/",
-      --  opts = { hl = "NeovimDashboardLogo8", shrink_margin = false, position = "center"},
-      --},
-      --{
-      --  type = "text",
-      --  val = " \/__/",
-      --  opts = { hl = "NeovimDashboardLogo9", shrink_margin = false, position = "center"},
-      --}
+      {
+        type = "text",
+        val = "<-|[  Fastest Code Editor  ]|->",
+        opts = { hl = "CodeEditor", shrink_margin = false, position = "center" },
+      },
+
+      {
+        type = "text",
+        val = greeting,
+        opts = {
+          position = "center",
+          hl = "getGreeting",
+        },
+      },
+
       {
         type = "padding",
         val = 1,
@@ -75,33 +140,37 @@ return {
     }
     -- stylua: ignore
     dashboard.section.buttons.val = {
-      --dashboard.button("p", " " .. " Open projects",    "<cmd> Telescope projects <cr>"),
-      dashboard.button("n", " " .. " New file",        "<cmd> ene | startinsert <cr>"),
-      dashboard.button("f", " " .. " Search File",       "<cmd> lua LazyVim.pick()() <cr>"),
-      dashboard.button("r", " " .. " Recent files",    "<cmd> lua LazyVim.pick('oldfiles')() <cr>"),
-      dashboard.button("g", " " .. " Find text",       "<cmd> lua LazyVim.pick('live_grep')() <cr>"),
-      --dashboard.button("Z", " " .. " Open Directories", "<cmd> search_dirs<cr>"),
+      dashboard.button("n", " " .. " New file", "<cmd> ene | startinsert <cr>"),
+      dashboard.button("f", " " .. " Search File", "<cmd> lua LazyVim.pick()() <cr>"),
+      dashboard.button("g", " " .. " Find text", "<cmd> lua LazyVim.pick('live_grep')() <cr>"),
+      dashboard.button("w", " " .. " Notification histories", "<cmd> Telescope notify <cr>"),
+      dashboard.button("c", " " .. " Config file", "<cmd> lua LazyVim.pick.config_files()() <cr>"),
+      dashboard.button("x", "󰙭 " .. " Extras component", "<cmd> LazyExtras <cr>"),
+      dashboard.button("l", " " .. " Check Update", "<cmd> Lazy <cr>"),
+      dashboard.button("q", " " .. " Quit", "<cmd> qa <cr>"),
       --dashboard.button("t", "T " .. " Terminal",    "<cmd> term <cr>"),
-      dashboard.button("w", " " .. " Notification histories",    "<cmd> Telescope notify <cr>"),
-      --dashboard.button("c", " " .. " Configure",          "<cmd> lua LazyVim.pick.config_files()() <cr>"),
-      dashboard.button("c", " " .. " Configure",          "<cmd> lua LazyVim.pick.config_files()() <cr>"),
-      dashboard.button("s", " " .. " Recovery Session", [[<cmd> lua require("persistence").load() <cr>]]),
-      dashboard.button("x", " " .. " Lazy Extras component",     "<cmd> LazyExtras <cr>"),
-      dashboard.button("l", " " .. " Lazy Package Manager",            "<cmd> Lazy <cr>"),
-      dashboard.button("q", " " .. " Quit( Exit )",            "<cmd> qa <cr>"),
+      --dashboard.button("Z", " " .. " Open Directories", "<cmd> search_dirs<cr>"),
+      --dashboard.button("c", " " .. " Configure",          "<cmd> lua LazyVim.pick.config_files()() <cr>"),
+      --dashboard.button("s", " " .. " Recovery Session", [[<cmd> lua require("persistence").load() <cr>]]),
+      --dashboard.button("r", " " .. " Recent files", "<cmd> lua LazyVim.pick('oldfiles')() <cr>"),
     }
     --vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#311B92" }) -- Dark Indigo
-    vim.api.nvim_set_hl(0, "AlphaButtons", { fg = "#D1C4E9" }) -- Light Purple
-    vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#8BC34A" }) -- Greenish
+    vim.api.nvim_set_hl(0, "AlphaButtons", { fg = "#33abea" }) -- blue -{ fg = "#fafafa" })  -- white
+    vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#fa3628" }) -- red
     vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#6A9C89" }) --"#edd691" 6A9C89})
-
     -- Footer
     local function footer()
       local total_plugins = require("lazy").stats().count
+      local datetime = os.date("  %d/%m/%Y   %H:%M")
       local version = vim.version()
-      local nvim_version_info = "  Neovim v" .. version.major .. "." .. version.minor .. "." .. version.patch
+      local nvim_version_info = "\n           󱓞 Version "
+        .. version.major
+        .. "."
+        .. version.minor
+        .. "."
+        .. version.patch
 
-      return " " .. total_plugins .. " plugins" .. nvim_version_info
+      return " Loaded " .. "  " .. total_plugins .. " plugins" .. datetime .. nvim_version_info
     end
 
     for _, button in ipairs(dashboard.section.buttons.val) do

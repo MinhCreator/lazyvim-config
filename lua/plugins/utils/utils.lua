@@ -80,4 +80,3 @@ function M.is_compatible_version(expected_version)
 end
 
 return M
-

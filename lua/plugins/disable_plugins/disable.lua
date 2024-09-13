@@ -8,8 +8,11 @@ return {
   { "luvit-meta", enabled = false },
   { "nvim-snippets", enabled = false },
   { "nvim-ts-autotag", enabled = false },
-  { "echasnovski/mini.animate", enabled = false },
+  --{ "echasnovski/mini.animate", enabled = false },
   --{ "folke/noice.nvim", enabled = true },
   --{ "neo-tree.nvim", enabled = true },
-  { "twilight.nvim", enabled = false },
+  --  { "twilight.nvim", enabled = false },
+  { "nvim-neo-tree/neo-tree.nvim", enabled = false },
+  { "folke/flash.nvim", enabled = false },
+  { "nvim-treesitter-textobjects", enabled = false },
 }

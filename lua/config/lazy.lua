@@ -5,7 +5,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -17,9 +17,8 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
-    --{ "MinhCreator/load_plugin.nvim", import = "lazyvim.plugins" },
-    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    --{ import = "plugins"},
+    { "LazyVim/LazyVim",                      import = "lazyvim.plugins" },
+    --{ import = "plugins/utils" },
     { import = "plugins/autocomplete_cmdline" }, --Load on plugins config in plugins folder
     { import = "plugins/color_theme" },
     { import = "plugins/core" },
@@ -28,10 +27,14 @@ require("lazy").setup({
     { import = "plugins/search" },
     { import = "plugins/lang" },
     { import = "plugins/lsp" },
+    { import = "plugins/todo_comment" },
+    --{ import = "lazyvim.plugins.extras.coding.codeium" },
   },
-  install = { colorscheme = {} }, --{ "onedark" } }, --{ "tokyonight", "habamax", "material" } },
+  --install = { colorscheme = {} },
+
+  -- automatically check for plugin updates
   checker = {
     enabled = false, -- check for plugin updates periodically
-    notify = true, -- notify on update
-  }, -- automatically check for plugin updates
+    notify = true,   -- notify on update
+  },
 })
