@@ -6,6 +6,7 @@ local diagnostic = vim.diagnostic
 
 local utils = require("plugins/utils.utils")
 
+
 -- set quickfix list from diagnostics in a certain buffer, not the whole workspace
 local set_qflist = function(buf_num, severity)
   local diagnostics = nil
@@ -149,7 +150,7 @@ lspconfig.pyright.setup({
         pylsp_mypy = {
           enabled = true,
           report_progress = true,
-          live_mode = false,
+          live_mode = true,
         },
         -- auto-completion options
         jedi_completion = { fuzzy = true },
@@ -190,21 +191,45 @@ if utils.executable("lua-language-server") then
     },
     capabilities = capabilities,
   })
+
 end
 
--- Change diagnostic signs.
-fn.sign_define("DiagnosticSignError", { text = "🆇", texthl = "DiagnosticSignError" })
-fn.sign_define("DiagnosticSignWarn", { text = "⚠️", texthl = "DiagnosticSignWarn" })
-fn.sign_define("DiagnosticSignInfo", { text = "ℹ️", texthl = "DiagnosticSignInfo" })
-fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
--- global config for diagnostic
+
+-- Change diagnostic signs.
+fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
+fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
+fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
+fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+
+
+
 diagnostic.config({
-  underline = false,
-  virtual_text = false,
+  underline = true,
+  virtual_text = true,
   signs = true,
   severity_sort = true,
+  float = { border = "single" },
 })
+
+-- global config for diagnostic
+-- diagnostic.config = function()
+-- local x = vim.diagnostic.severity
+--
+-- vim.diagnostic.config {
+-- virtual_text = { prefix = "" },
+-- signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
+-- underline = true,
+-- float = { border = "single" },
+-- }
+--
+-- local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+-- function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+-- opts = opts or {}
+-- opts.border = "rounded"
+-- return orig_util_open_floating_preview(contents, syntax, opts, ...)
+-- end
+-- end
 
 -- lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
 --   underline = false,
@@ -212,5 +237,3 @@ diagnostic.config({
 --   signs = true,
 --   update_in_insert = false,
 -- })
-
--- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.

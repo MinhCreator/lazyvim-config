@@ -1,4 +1,5 @@
 return {
+  
   { "projekt0n/github-nvim-theme",   enabled = false },
   { "alexmozaidze/palenight.nvim",   enabled = false },
   { "sekke276/dark_flat.nvim",       enabled = false },
@@ -11,7 +12,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark", --"github_dark_default",--"github_dark_dimmed",--"tokyodark", --"dark_flat", --"cyberdream",
+      colorscheme = "onedark", --"dark_flat", --"onedark", --"github_dark_default",--"github_dark_dimmed",--"tokyodark", --"dark_flat", --"cyberdream",
     },
   },
 }

@@ -3,13 +3,12 @@
 --if vim.g.neovide then
 --  active_nvim_tree = false
 --  neovide = true
-
 return {
 
   {
     "nvim-telescope/telescope-file-browser.nvim",
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
-
+    event = "VeryLazy",
     require("telescope").setup({
       defaults = {
         theme = "center",
@@ -40,3 +39,4 @@ return {
 --    { "nvim-telescope/telescope-file-browser", enabled = false },
 --  }
 --end
+

@@ -79,7 +79,7 @@ return {
     vim.api.nvim_set_hl(0, "NeovimDashboardLogo4", { fg = "#06D6A0" }) --{ fg = color }) --
     vim.api.nvim_set_hl(0, "NeovimDashboardLogo5", { fg = "#118AB2" }) --{ fg = color }) --
     vim.api.nvim_set_hl(0, "NeovimDashboardLogo6", { fg = "#073B4C" }) --{ fg = color }) --
-    vim.api.nvim_set_hl(0, "CodeEditor", { fg = "#fa3628" }) --{ fg = pick_color()  })
+    vim.api.nvim_set_hl(0, "CodeEditor", { fg = "#fa3628" })           --{ fg = pick_color()  })
     vim.api.nvim_set_hl(0, "getGreeting", { fg = check_greeting_color() })
     dashboard.section.header.type = "group"
     dashboard.section.header.val = {
@@ -155,20 +155,20 @@ return {
       --dashboard.button("r", " " .. " Recent files", "<cmd> lua LazyVim.pick('oldfiles')() <cr>"),
     }
     --vim.api.nvim_set_hl(0, "AlphaHeader", { fg = "#311B92" }) -- Dark Indigo
-    vim.api.nvim_set_hl(0, "AlphaButtons", { fg = "#33abea" }) -- blue -{ fg = "#fafafa" })  -- white
+    vim.api.nvim_set_hl(0, "AlphaButtons", { fg = "#33abea" })  -- blue -{ fg = "#fafafa" })  -- white
     vim.api.nvim_set_hl(0, "AlphaShortcut", { fg = "#fa3628" }) -- red
-    vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#6A9C89" }) --"#edd691" 6A9C89})
+    vim.api.nvim_set_hl(0, "AlphaFooter", { fg = "#6A9C89" })   --"#edd691" 6A9C89})
     -- Footer
     local function footer()
       local total_plugins = require("lazy").stats().count
       local datetime = os.date("  %d/%m/%Y   %H:%M")
       local version = vim.version()
       local nvim_version_info = "\n           󱓞 Version "
-        .. version.major
-        .. "."
-        .. version.minor
-        .. "."
-        .. version.patch
+          .. version.major
+          .. "."
+          .. version.minor
+          .. "."
+          .. version.patch
 
       return " Loaded " .. "  " .. total_plugins .. " plugins" .. datetime .. nvim_version_info
     end

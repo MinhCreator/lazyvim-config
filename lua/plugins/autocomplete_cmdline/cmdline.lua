@@ -12,7 +12,7 @@ return {
     lazy = true,
     enabled = use_noice,
     dependencies = {
-      { "MunifTanjim/nui.nvim", enabled = use_noice },
+      { "MunifTanjim/nui.nvim", enabled = true }, --use_noice },
     },
     event = "BufWinEnter",
     opts = {
@@ -139,3 +139,4 @@ return {
     end,
   },
 }
+

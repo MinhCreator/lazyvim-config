@@ -49,8 +49,7 @@ function M.rand_element(seq)
   local idx = M.rand_int(1, #seq)
 
   return seq[idx]
-end
-
+end 
 --- check if the current nvim version is compatible with the allowed version
 --- @param expected_version string
 --- @return boolean
@@ -80,3 +79,4 @@ function M.is_compatible_version(expected_version)
 end
 
 return M
+

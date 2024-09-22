@@ -1,6 +1,6 @@
 local pattern = '[^:]+:(%d+):(%d+):(%w+):(.+)'
 local groups = { 'lnum', 'col', 'code', 'message', "end_col", 'file', 'severity' }
-local defaults = { ["source"] = "ruff" }
+local defaults = { ["source"] = "ruff", "pyright" }
 
 require('lint').linters.ruff = {
     cmd = 'ruff_cmd',

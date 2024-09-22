@@ -1,27 +1,35 @@
-local icons = LazyVim.config.icons
-
 return {
 
   -- add extras packages, and setup treesitter for json, json5 and jsonc
-  --{ import = "lazyvim.plugins.extras.lang.json" },
-  -- { import = "lazyvim.plugins.extras.lsp.none-ls" },
-  --{ "yetone/avante.nvim" },
   { import = "lazyvim.plugins.extras.lang.python" },
-  { "j-hui/fidget.nvim",                           enabled = false },
+  { "j-hui/fidget.nvim",                          enabled = false },
   { "nvim-lua/popup.nvim" },
-  { "brenoprata10/nvim-highlight-colors" },
+  { "brenoprata10/nvim-highlight-colors",         lazy = true },
   { "stevearc/conform.nvim" },
-  { "nvim-telescope/telescope-fzf-native.nvim",    build = "make" },
-  --{ "tpope/vim-repeat" },
-  { "nvim-telescope/telescope-ui-select.nvim" },
-  { "mg979/vim-visual-multi" },
-  { "nvim-telescope/telescope-live-grep-args.nvim" },
+  { "nvim-telescope/telescope-fzf-native.nvim",   build = "make", lazy = true },
+  { "mg979/vim-visual-multi",                     lazy = true },
   { import = "lazyvim.plugins.extras.vscode" },
-  { "nvim-neotest/nvim-nio" },
+  { "nvim-neotest/nvim-nio",                      lazy = true },
+
+  {
+    "nvim-telescope/telescope.nvim",
+    lazy = true,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope-ui-select.nvim",
+      "nvim-telescope/telescope-live-grep-args.nvim",
+      "nvim-telescope/telescope-fzf-native.nvim",
+    },
+
+    config = function()
+      require("plugins/search.search")
+    end,
+  },
 
   -- change trouble config
   {
     "folke/trouble.nvim",
+    lazy = true,
     -- opts will be merged with the parent spec
     opts = { use_diagnostic_signs = true },
   },
@@ -31,32 +39,92 @@ return {
   -- override nvim-cmp
   {
     "hrsh7th/nvim-cmp",
+    lazy = true,
     dependencies = {
-      { "hrsh7th/cmp-emoji" },
+      "hrsh7th/cmp-emoji",
+      "hrsh7th/cmp-buffer",  -- buffer completions
+      "hrsh7th/cmp-path",    -- path completions
+      "hrsh7th/cmp-cmdline", -- cmdline completions
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lua",
+      "hrsh7th/cmp-calc",
+      "L3MON4D3/LuaSnip",
     },
-    ---@class opts cmp.ConfigSchema
-    ---@param opts cmd.ConfigSchema
+
     opts = function(_, opts)
       opts.auto_brackets = opts.auto_brackets or {}
       table.insert(opts.auto_brackets, "python")
-      table.insert(opts.sources, { name = "emoji" })
+      table.insert(opts.auto_brackets, "lua")
+      table.insert(opts.auto_brackets, "json")
+      local icon_menu = require("user.icons").ui
+      local icon = require("user.icon_cmp")
+      opts.formatting = {
+        format = function(entry, vim_item)
+          -- Kind icons
+          vim_item.kind = string.format("%s %s", icon[vim_item.kind], vim_item.kind) -- This concatenates the icons with the name of the item kind
+          -- Source
+          vim_item.menu = ({
+            buffer = "(Buffer)",
+            nvim_lsp = "(LSP)",
+            luasnip = "(LuaSnip)",
+            nvim_lua = "(Lua)",
+            latex_symbols = "(LaTeX)",
+          })[entry.source.name]
+
+          if entry.source.name == "calc" then
+            vim_item.kind = icon.Calc
+            -- return vim_item
+          end
+
+          return vim_item
+        end,
+      }
+      opts.sources = {
+        { name = "nvim_lsp" },
+        { name = "lsp" },
+        { name = "buffer" },
+        { name = "path" },
+        { name = "crates" },
+        { name = "calc" },
+        -- { name = "luasnip" },
+      }
+      opts.window = {
+        completion = {
+          border = icon_menu.Border,
+          scrollbar = "",
+        },
+        documentation = {
+          border = nil, --icon_menu.Border,
+          -- scrollbar = nil,
+        },
+      }
     end,
   },
-
   -- add more treesitter parsers
   {
     "nvim-treesitter/nvim-treesitter",
+    lazy = true,
+    build = ":TSUpdate",
+    event = "VeryLazy",
+
     opts = {
       ensure_installed = {
-        "json",
+        --"json",
         "lua",
-        "markdown",
-        "markdown_inline",
+        --"markdown",
+        --"markdown_inline",
         "python",
-        --"vim",
-        --"yaml",
       },
+      highlight = {
+        enable = true,
+      },
+      indent = { enable = true },
+      auto_install = true, -- automatically install syntax support when entering new file type buffer
     },
+    config = function(_, opts)
+      local configs = require("nvim-treesitter.configs")
+      configs.setup(opts)
+    end,
   },
 
   {
@@ -69,42 +137,39 @@ return {
   --Add linter
   {
     "mfussenegger/nvim-lint",
-    --config = function()
-    --  --require("plugins/lsp.formater_and_linter")
-    --  --require("plugins/ui_menu.lualine")
-    --end,
-    --opts = {
-    --  formatters_by_ft = {
-    --    lua = { "stylua" },
-    --    -- Conform will run multiple formatters sequentially
-    --    python = { "black", "autopep8", "ruff_format" },
-    --    -- You can customize some of the format options for the filetype (:help conform.format)
-    --
-    --    format_on_save = {
-    --      -- These options will be passed to conform.format()
-    --      timeout_ms = 500,
-    --      lsp_format = "fallback",
-    --    },
-    --    format_after_save = {
-    --      lsp_format = "fallback",
-    --    },
-    --    notify_on_error = true,
-    --    -- Conform will notify you when no formatters are available for the buffer
-    --    notify_no_formatters = true,
-    --  },
+    lazy = true,
+    event = {
+      "BufReadPre",
+      "BufNewFile",
+      "VeryLazy",
+    },
+    config = function()
+      --require("plugins/lsp.formater_and_linter")
+      --require("plugins/ui_menu.lualine")
+      local lint = require("lint")
+
+      local lint_group = vim.api.nvim_create_augroup("Linter", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_group,
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+    end,
   },
 
   --add more formater
   {
     "stevearc/conform.nvim",
-    --config = function()
-    --  --require("plugins/lsp.formater_and_linter")
-    --end,
+    -- config = function()
+    --   require("plugins/lsp.formater_and_linter")
+    -- end,
   },
 
   -- Add lsp and formater, linter
   {
     "williamboman/mason.nvim",
+    lazy = true,
     opts = {
       ensure_installed = {
         "black",
@@ -139,51 +204,51 @@ return {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
+  },
 
+  {
+    "rcarriga/nvim-notify",
     config = function()
-      --require("plugins/overwrite.notify_animation")
+      require("plugins/ui_menu.notify")
     end,
   },
 
-  --{
-  --  "nvim-treesitter/nvim-treesitter-context",
-  --  config = function()
-  --    require("treesitter-context").setup({
-  --      max_lines = 5,
-  --    })
-  --  end,
-  --},
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = "VeryLazy",
+    config = function()
+      require("treesitter-context").setup({
+        max_lines = 5,
+      })
+    end,
+  },
 
   {
     "RRethy/vim-illuminate",
+    event = "VeryLazy",
     config = function()
       require("illuminate")
     end,
   },
 
   {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate auto_install",
-    config = function()
-      local configs = require("nvim-treesitter.configs")
-
-      configs.setup({
-        ensure_installed = {
-          "python",
-          "lua",
-          "vim",
-          "vimdoc",
-          "json",
-          "markdown",
-        },
-      })
-    end,
-  },
-
-  {
     "windwp/nvim-autopairs",
-    event = "InsertEnter",
+    event = { "InsertEnter", "VeryLazy" },
+    config = function()
+      require("plugins.brackets_pair.auto_pairs")
+    end,
     opts = {
+      fastwrap = {
+        check_comma = true,
+        highlight = "PmenuSel",
+        map = "<M-e>",
+        chars = { "{", "[", "(", '"', "'" },
+        pattern = ([[ [%'%"%)%>%]%)%}%,] ]]):gsub("%s+", ""),
+        offset = 0,
+        end_key = "$",
+        keys = "qwertyuiopzxcvbnmasdfghjkl",
+        highlight_grey = "LineNr",
+      },
       disable_filetype = { "TelescopePrompt", "spectre_panel" },
       disable_in_macro = true,        -- disable when recording or executing a macro
       disable_in_visualblock = false, -- disable when insert after visual block mode
@@ -195,17 +260,22 @@ return {
       enable_bracket_in_quote = true,   --
       enable_abbr = false,              -- trigger abbreviation
       break_undo = true,                -- switch for basic rule break undo sequence
-      check_ts = false,
       map_cr = true,
-      map_bs = true,   -- map the <BS> key
-      map_c_h = false, -- Map the <C-h> key to delete a pair
-      map_c_w = false, -- map <c-w> to delete a pair if possible
+      map_bs = true,                    -- map the <BS> key
+      map_c_h = false,                  -- Map the <C-h> key to delete a pair
+      map_c_w = false,                  -- map <c-w> to delete a pair if possible
+      check_ts = true,
+      ts_config = {
+        python = true,
+      },
+      fast_wrap = {},
     },
   },
 
   -- Add compiler
   { -- This plugin
     "Zeioth/compiler.nvim",
+    event = "VeryLazy",
     cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
     dependencies = { "stevearc/overseer.nvim", "nvim-telescope/telescope.nvim" },
     opts = {},
@@ -213,6 +283,7 @@ return {
 
   { -- The task runner we use
     "stevearc/overseer.nvim",
+    event = "VeryLazy",
     commit = "6271cab7ccc4ca840faa93f54440ffae3a3918bd",
     cmd = { "CompilerOpen", "CompilerToggleResults", "CompilerRedo" },
     opts = {
@@ -226,6 +297,7 @@ return {
   },
   {
     "linrongbin16/lsp-progress.nvim",
+    lazy = true,
     config = function()
       require("plugins/ui_menu.lualine")
       require("plugins/lsp.lsp_progress")
@@ -233,6 +305,7 @@ return {
   },
   {
     "linux-cultist/venv-selector.nvim",
+    event = "VeryLazy",
     branch = "regexp", -- Use this branch for the new version
     cmd = "VenvSelect",
     enabled = function()
@@ -248,5 +321,49 @@ return {
     --  Call config for python files and load the cached venv automatically
     ft = "python",
     keys = { { "<leader>cv", "<cmd>:VenvSelect<cr>", desc = "Select VirtualEnv", ft = "python" } },
+  },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    lazy = true,
+    dependencies = {
+      { "nvim-lua/plenary.nvim",       lazy = true },
+      { "MunifTanjim/nui.nvim",        lazy = true },
+      { "nvim-tree/nvim-web-devicons", lazy = true },
+    },
+    opts = function()
+      --require("plugins/explorer.neo-tree").setup()
+    end,
+  },
+  {
+    "akinsho/toggleterm.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("plugins/terminal.toggleTerm")
+      -- require("toggleterm").setup()
+    end,
+  },
+  --Add indent rainbow
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "TheGLander/indent-rainbowline.nvim",
+    },
+    opts = function(_, opts)
+      require("indent-rainbowline").make_opts(opts, {
+        color_transparency = 0.05,
+      })
+    end,
+  },
+  {
+    "LunarVim/bigfile.nvim",
+    lazy = true,
+    event = "BufReadPre",
+    opts = {
+      filesize = 2, -- size of the file in MiB, the plugin round file sizes to the closest MiB
+    },
+    config = function(_, opts)
+      require("bigfile").setup(opts)
+    end,
   },
 }

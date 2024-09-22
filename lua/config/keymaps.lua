@@ -1,13 +1,12 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
---add go to line
---vim.keymap.set("n", "<leader><C-tab>", "<cmd> : ", { noremap = true, desc = "enter the <line number>" })
 
 --show path
-vim.keymap.set("n", "<leader>pp", "<cmd>echo expand('%:p')<cr>", { noremap = true, silent = true, desc = "Show path" })
-
+vim.keymap.set("n", "<leader>p", "<cmd>:echo expand('%:p')<cr>", { noremap = true, silent = false, desc = "Show path" })
+vim.keymap.set("n", "<leader>o", "<cmd> Neotree focus<cr>", { noremap = true, silent = false, desc = "focus explorer" })
 -- Add keymap for compiler
+
 -- Open compiler
 vim.api.nvim_set_keymap("n", "<F6>", "<cmd>CompilerOpen<cr>", { noremap = true, silent = true, desc = "Open compiler" })
 
@@ -16,7 +15,7 @@ vim.api.nvim_set_keymap(
   "n",
   "<S-F6>",
   "<cmd>CompilerStop<cr>" -- (Optional, to dispose all tasks before redo)
-    .. "<cmd>CompilerRedo<cr>",
+  .. "<cmd>CompilerRedo<cr>",
   { noremap = true, silent = true, desc = "Stop compiler and redo" }
 )
 
@@ -59,9 +58,9 @@ require("telescope").setup({
       mappings = {
         ["i"] = {},
         ["n"] = {
-          ["c"] = fb_actions.create, -- Create file/folder at current path (trailing path separator creates folder)
-          ["r"] = fb_actions.rename, -- Rename file/folder
-          ["<C-c>"] = fb_actions.copy, -- Copy (multi-)selected files/folders to current path
+          ["c"] = fb_actions.create,         -- Create file/folder at current path (trailing path separator creates folder)
+          ["r"] = fb_actions.rename,         -- Rename file/folder
+          ["<C-c>"] = fb_actions.copy,       -- Copy (multi-)selected files/folders to current path
           ["<leader>d"] = fb_actions.remove, -- Delete (multi-)selected files/folders
           --["<leader>m"] = fb_actions.move,           -- Move (multi-)selected files/folders
           { noremap = true, silent = true, desc = "" },
