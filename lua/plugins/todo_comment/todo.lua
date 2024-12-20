@@ -4,6 +4,7 @@
 return {
   {
     "folke/todo-comments.nvim",
+    lazy = true,
     enabled = true,
     dependencies = { "nvim-lua/plenary.nvim" },
     event = { "BufReadPost", "BufNewFile" },

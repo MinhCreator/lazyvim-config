@@ -1,6 +1,7 @@
 return {
   {
-    "norcalli/nvim-colorizer.lua",
+    "NvChad/nvim-colorizer.lua",
+    lazy = true,
     opts = {
       "*",    -- Highlight all files, but customize some others.
       "!vim", -- Exclude vim from highlighting.
@@ -8,4 +9,3 @@ return {
     },
   },
 }
-

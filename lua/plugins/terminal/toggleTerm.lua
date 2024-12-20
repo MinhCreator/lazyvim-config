@@ -1,98 +1,88 @@
-local powershell_options = {
-  shell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell",
-  shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
-  shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
-  shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",
-  shellquote = "",
-  shellxquote = "",
-}
-
-for option, value in pairs(powershell_options) do
-  vim.opt[option] = value
-end
-
-local Terminal = require("toggleterm.terminal").Terminal
-local toggle_float = function()
-  local float = Terminal:new({ direction = "float" })
-  return float:toggle()
-end
-local toggle_lazygit = function()
-  local lazygit = Terminal:new({ cmd = "Lazygit", direction = "float" })
-  return lazygit:toggle()
-end
-
-local toggle_horizontal = function()
-  local horizontal = Terminal:new({ direction = "horizontal" })
-  return horizontal:toggle()
-end
-
-local toggle_tab = function()
-  local tab = Terminal:new({ direction = "tab" })
-  return tab:toggle()
-end
-
-local toggle_vertical = function()
-  local vertical = Terminal:new({ direction = "vertical" })
-  return vertical:toggle()
-end
-
-require("toggleterm").setup({
-  size = function(term)
-    if term.direction == "horizontal" then
-      return 15
-    elseif term.direction == "vertical" then
-      return vim.o.columns * 0.4
-    end
-  end,
-  mappings = {
-
-    vim.keymap.set("n", "<leader>t", "<cmd>ToggleTerm<cr>", { noremap = true, silent = true, desc = " ToggleTerm" }),
-    vim.keymap.set("n", "<leader>tf", toggle_float, { noremap = true, silent = true, desc = "ToggleFloat" }),
-
-    vim.keymap.set("n", "<leader>tl", toggle_lazygit, { noremap = true, silent = true, desc = "ToggleLazyGit" }),
-
-    vim.keymap.set("n", "<leader>th", toggle_horizontal, { noremap = true, silent = true, desc = "ToggleHorizontal" }),
-    vim.keymap.set("n", "<leader>tt", toggle_tab, { noremap = true, silent = true, desc = "ToggleTab" }),
-
-    vim.keymap.set("n", "<leader>tv", toggle_vertical, { noremap = true, silent = true, desc = "ToggleVertical" }),
+return {
+  "akinsho/toggleterm.nvim",
+  lazy = true,
+  cmd = {
+    "ToggleTerm",
+    "TermExec",
+    "ToggleTermToggleAll",
+    "ToggleTermSendCurrentLine",
+    "ToggleTermSendVisualLines",
+    "ToggleTermSendVisualSelection",
   },
-
-  hide_numbers = true, -- hide the number column in toggleterm buffers
-  shade_filetypes = {},
-  autochdir = true, -- when neovim changes it current directory the terminal will change it's own when next it's opened
-
-  shade_terminals = true, -- NOTE: this option takes priority over highlights specified so if you specify Normal highlights you should set this to false
-  start_in_insert = true,
-  insert_mappings = true, -- whether or not the open mapping applies in insert mode
-  terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
-  persist_size = true,
-  persist_mode = true, -- if set to true (default) the previous terminal mode will be remembered
-  close_on_exit = true, -- close the terminal window when the process exits
-  clear_env = false, -- use only environmental variables from `env`, passed to jobstart()
-
-  -- Change the default shell. Can be a string or a function returning a string
-  shell = vim.o.shell,
-  auto_scroll = true, -- automatically scroll to the bottom on terminal output
-  -- This field is only relevant if direction is set to 'float'
-  float_opts = {
-    -- The border key is *almost* the same as 'nvim_open_win'
-    -- see :h nvim_open_win for details on borders however
-    -- the 'curved' border is a custom border type
-    -- not natively supported but implemented in this plugin.
-    border = "curved", --'single' | 'double' | 'shadow' |  | ... other options supported by win open
-    -- like `size`, width, height, row, and col can be a number or function which is passed the current terminal
-    -- width = <value>,
-    -- height = <value>,
-    -- row = <value>,
-    -- col = <value>,
-    -- winblend = 3,
-    -- zindex = <value>,
-    title_pos = "center", -- 'left' |  | 'right', position of the title of the floating window
-  },
-  winbar = {
-    enabled = false,
-    name_formatter = function(term) --  term: Terminal
-      return term.name
+  -- branch = "main",
+  enabled = true,
+  opts = {
+    size = function(term)
+      if term.direction == "horizontal" then
+        return 15
+      elseif term.direction == "vertical" then
+        return vim.o.columns * 0.4
+      end
     end,
+    open_mapping = [[<c-\>]],
+    hide_numbers = true,
+    shade_filetypes = {},
+    autochdir = true,
+    shade_terminals = true,
+    -- shading_factor = 2,
+    start_in_insert = true,
+    insert_mappings = true,
+    persist_size = true,
+    presist_mode = true,
+    close_on_exit = true,
+    clear_env = false,
+    shell = vim.o.shell,
+    float_opts = {
+      border = "curved",
+      winblend = 0,
+      highlights = {
+        border = "Normal",
+        background = "Normal",
+      },
+      title_pos = "center",
+    },
+    winbar = {
+      enabled = false,
+      name_formatter = function(term)       --  term: Terminal
+        return term.name
+      end,
+    },
   },
-})
+  config = function(_, opts)
+    require("toggleterm").setup(opts)
+    function _G.set_terminal_keymaps()
+      local optsn = { noremap = true }
+      vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<C-\><C-n>]], optsn)
+      vim.api.nvim_buf_set_keymap(0, "t", "jk", [[<C-\><C-n>]], optsn)
+      vim.api.nvim_buf_set_keymap(0, "t", "<C-h>", [[<C-\><C-n><C-W>h]], optsn)
+      vim.api.nvim_buf_set_keymap(0, "t", "<C-j>", [[<C-\><C-n><C-W>j]], optsn)
+      vim.api.nvim_buf_set_keymap(0, "t", "<C-k>", [[<C-\><C-n><C-W>k]], optsn)
+      vim.api.nvim_buf_set_keymap(0, "t", "<C-l>", [[<C-\><C-n><C-W>l]], optsn)
+    end
+
+    vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
+  end,
+  keys = {
+    { "<leader>t", "", desc = "  Terminal", mode = "n" },
+    -- { "<leader>tl", "<cmd>terminal live-server<cr>", desc = "Live Server", mode = "n" },
+    { "<leader>tP", "<cmd>lua require('plugins.utils.whichkey')._NEWTAB_TOGGLE()<cr>", desc = "Power Shell", mode = "n" },
+    { "<leader>tl", "<cmd>lua require('plugins.utils.whichkey')._LAZYGIT_TOGGLE()<cr>", desc = "LazyGit", mode = "n" },
+    { "<leader>tx", "<cmd>ToggleTermToggleAll!<cr>", desc = "Close Tab", mode = "n" },
+    -- { "<leader>tn", "<cmd>lua require('plugins.utils.whichkey')._NODE_TOGGLE()<cr>", desc = "Node", mode = "n" },
+    -- { "<leader>tb", "<cmd>lua require('plugins.utils.whichkey')._BTOP_TOGGLE()<cr>", desc = "Btop", mode = "n" },
+    { "<leader>tp", "<cmd>lua require('plugins.utils.whichkey')._PYTHON_TOGGLE()<cr>", desc = "Python", mode = "n" },
+    { "<leader>tf", "<cmd>lua require('plugins.utils.whichkey')._t_float()<cr>", desc = "Float", mode = "n" },
+    { "<leader>th", "<cmd>lua require('plugins.utils.whichkey')._t_horizontal()<cr>", desc = "Horizontal", mode = "n" },
+    { "<leader>tv", "<cmd>lua require('plugins.utils.whichkey')._t_vertical()<cr>", desc = "Vertical", mode = "n" },
+    { "<leader>ts", "<cmd>lua require('plugins.utils.whichkey')._t_tab()<cr>", desc = "New Tab", mode = "n" },
+    { "<leader>ta", "<cmd>lua require('plugins.utils.whichkey')._OPEN_ALACRITTY()<cr>", desc = "Open Alacritty", mode = "n" },
+    { "<leader>tw", "<cmd>lua require('plugins.utils.whichkey')._OPEN_WEZTERM()<cr>", desc = "Open Wezterm", mode = "n" },
+    {
+      "<leader>tt",
+      "<cmd>lua require('plugins.utils.whichkey')._OPEN_WEZTERM_TAB()<cr>",
+      desc = "Open Tab Wezterm",
+      mode = "n",
+    },
+    { "<leader>tj", "<cmd>lua _SET_TAB_TITLE()<cr>", desc = "Set Tab Title", mode = "n" },
+  },
+}

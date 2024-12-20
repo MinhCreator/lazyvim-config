@@ -1,17 +1,21 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true, buffer = 0 }
+-- quick change working dir
+map("n", "<leader>cd", "<cmd>cd %:h<cr>:pwd<CR>",
+  { noremap = true, silent = true, desc = "Change working dir" })
 
---show path
-vim.keymap.set("n", "<leader>p", "<cmd>:echo expand('%:p')<cr>", { noremap = true, silent = false, desc = "Show path" })
-vim.keymap.set("n", "<leader>o", "<cmd> Neotree focus<cr>", { noremap = true, silent = false, desc = "focus explorer" })
--- Add keymap for compiler
-
+--copy, cut and Paste
+map({ "n", "v", "c" }, "<C-v>", '"+p', { silent = false, desc = "Paste text" })
+map({ "n", "v", "c" }, "<C-c>", '"+y', { silent = false, desc = "Copy text" })
+map({ "n", "v", "c" }, "<C-x>", 'dd', { silent = false, desc = "Cut text" })
 -- Open compiler
-vim.api.nvim_set_keymap("n", "<F6>", "<cmd>CompilerOpen<cr>", { noremap = true, silent = true, desc = "Open compiler" })
+map("n", "<F6>", "<cmd>CompilerOpen<cr>", { noremap = true, silent = true, desc = "Open compiler" })
 
 -- Redo last selected option
-vim.api.nvim_set_keymap(
+map(
   "n",
   "<S-F6>",
   "<cmd>CompilerStop<cr>" -- (Optional, to dispose all tasks before redo)
@@ -19,33 +23,44 @@ vim.api.nvim_set_keymap(
   { noremap = true, silent = true, desc = "Stop compiler and redo" }
 )
 
+--toggle sidebar
+map(
+  "n",
+  "<leader>e",
+  "<cmd>SidebarNvimToggle<cr>",
+  { noremap = true, silent = true, desc = "Toggle sidebar" })
+
+map(
+  "n",
+  "<C-S-e>",
+  "<cmd>NvimTreeToggle<cr>",
+  { noremap = true, silent = true, desc = "Toggle file explorer" }
+)
+
+
 -- Toggle compiler results
-vim.api.nvim_set_keymap(
+map(
   "n",
   "<S-F7>",
   "<cmd>CompilerToggleResults<cr>",
   { noremap = true, silent = true, desc = "Toggle compiler results" }
 )
 
-vim.api.nvim_set_keymap("n", "<C-tab>", "<cmd> buffer <cr>", { noremap = true, silent = true, desc = "Go to buffer" })
+map("n", "<C-tab>", "<cmd> buffer <cr>", { noremap = true, silent = true, desc = "Go to buffer" })
 
--- add toggle cmdline
-vim.keymap.set("n", "<S><S>", "<cmd> :", { noremap = true, silent = true, desc = "Toggle cmdline" })
+
 
 -- add toggle home screen
-vim.keymap.set("n", "<C-a>", "<cmd>Alpha<cr>", { noremap = true, desc = "Toggle home screen" })
+map("n", "<C-a>", "<cmd>Alpha<cr>", { noremap = true, desc = "Toggle home screen" })
 
 -- add keymap for file browser
-
 -- open file_browser with the path of the current buffer
-vim.keymap.set(
+map(
   "n",
-  "<C-S-e>",
+  "<leader>e",
   ":Telescope file_browser path=%:p:h select_buffer=true<CR>",
   { noremap = true, desc = "Open file browser", silent = true }
 )
-
-vim.keymap.set("n", "<space>n", ":Telescope resume<cr>", { noremap = true, desc = "Resume last action", silent = true })
 
 -- add extended keymap for file_browser
 local fb_actions = require("telescope").extensions.file_browser.actions

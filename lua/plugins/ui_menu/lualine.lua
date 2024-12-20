@@ -8,6 +8,8 @@ local colors = {
   green = "#46fa6a",
   grey = "#444544",
   yellow = "#ECBE7B",
+  orange = "#f7db07",
+  scalet = "#b52121",
 }
 
 local bubbles_theme = {
@@ -35,7 +37,7 @@ local icons = require("user.icons")
 local mode = {
   "mode",
   right_padding = 5,
-  separator = { left = "" },
+  -- separator = { left = "", },
   -- right_padding = 3,
   fmt = function(str)
     local Nvim_mode = vim.api.nvim_get_mode()["mode"]
@@ -82,14 +84,15 @@ local git_file_status = {
   cond = conditions.hide_in_width,
 }
 
+
 require("lualine").setup({
   options = {
     theme = bubbles_theme,
-    component_separators = { left = "", right = "" },
+    component_separators = { left = "|", right = "|" }, -- "" ""
     section_separators = { left = "", right = "" },
     always_divide_middle = true,
     disabled_filetypes = {
-      --"TelescopePrompt",
+      "TelescopePrompt",
       "packer",
       --"alpha",
       "dashboard",
@@ -99,7 +102,7 @@ require("lualine").setup({
       "toggleterm",
       "lazy",
       "mason",
-      "neo-tree",
+      --"neo-tree",
       "startuptime",
     },
     refresh = {          -- sets how often lualine should refresh it's contents (in ms)
@@ -112,20 +115,23 @@ require("lualine").setup({
       -- like require('lualine').refresh()
     },
   },
+
   sections = {
     lualine_a = {
       mode,
-      -- {
-      -- separator = { left = "" },
-      -- right_padding = 5,
-      -- },
+
     },
     lualine_b = {
-      { "branch", icon = "󰊢 " },
+      {
+        "branch",
+        icon = "󰊢",
+        color = { fg = "#fa3628", gui = "bold" },
+      },
       {
         "filename",
         file_status = true,     -- Displays file status (readonly status, modified status)
         newfile_status = false, -- Display new file status (new file means no write after created)
+        icon = "",
         path = 4,               -- 0: Just the filename
         -- 1: Relative path
         -- 2: Absolute path
@@ -137,15 +143,17 @@ require("lualine").setup({
         symbols = {
           modified = " ", --"[+]",      -- Text to show when the file is modified.
           readonly = " ", --"[-]",      -- Text to show when the file is non-modifiable or readonly.
-          unnamed = "[No name]",--"-|Unnamed|-", -- Text to show for unnamed buffers.
-          newfile = "[New]",--"-|New|-", -- Text to show for newly created file before first write
+          unnamed = "[No name]", --"-|Unnamed|-", -- Text to show for unnamed buffers.
+          newfile = "[New]", --"-|New|-", -- Text to show for newly created file before first write
         },
         --icon = "",
+
       },
     },
     lualine_c = {
-      git_file_status,
-      --"%=",
+
+      --git_file_status,
+      -- separator = { right = "" },
       --"progress",
       --"lsp",
       --"lint_progress", --[[ add your center compoentnts here in place of this comment ]]
@@ -162,6 +170,18 @@ require("lualine").setup({
       --     alternate_file = " ", --" ",
       --   }
       -- },
+      {
+        "diagnostics",
+        sources = { "nvim_diagnostic" },
+        symbols = { error = "   ", warn = "   ", info = "   ", hint = " 󰌵 " },
+        diagnostics_color = {
+          error = { fg = colors.red },
+          warn = { fg = colors.orange },
+          info = { fg = colors.cyan },
+          hint = { fg = colors.blue },
+        },
+        position = "center",
+      },
     },
     lualine_x = {
       -- {
@@ -182,15 +202,17 @@ require("lualine").setup({
         "filetype",
         colored = true,
         icon = { align = "left" },
-        -- ingnore_filetypes = {
-        "Alpha"
-        -- },
+        cond = conditions.buffer_not_empty,
       },
       "encoding",
       "fileformat",
     },
     lualine_z = {
-      { "location", separator = { right = "" }, left_padding = 5 },
+      {
+        "location",
+        -- separator = { right = "" },
+        left_padding = 5
+      },
     },
   },
 
@@ -206,11 +228,19 @@ require("lualine").setup({
         colored = true,
         icon_only = true,
         icon = { align = "center" },
+
       },
     },
   },
   tabline = {},
   extensions = {},
 })
-return {}
-
+return {
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("plugins/ui_menu.lualine")
+    end,
+  },
+}

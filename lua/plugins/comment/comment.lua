@@ -1,28 +1,6 @@
 return {
     "numToStr/Comment.nvim",
-    -- specs = {
-    -- {
-    -- "LazyVim/LazyVim",
-    -- opts = function(_, opts)
-    -- local maps = opts.mappings
-    -- maps.n["<Leader>/"] = {
-    -- function()
-    -- return require("Comment.api").call(
-    -- "toggle.linewise." .. (vim.v.count == 0 and "current" or "count_repeat"),
-    -- "g@$"
-    -- )()
-    -- end,
-    -- expr = true,
-    -- silent = true,
-    -- desc = "Toggle comment line",
-    -- }
-    -- maps.x["<Leader>/"] = {
-    -- "<Esc><Cmd>lua require('Comment.api').locked('toggle.linewise')(vim.fn.visualmode())<CR>",
-    -- desc = "Toggle comment",
-    -- }
-    -- end,
-    -- },
-    -- },
+    event = "VeryLazy",
     keys = function(_, keys)
         local plugin = require("lazy.core.config").spec.plugins["Comment.nvim"]
         local opts = require("lazy.core.plugin").values(plugin, "opts", false)

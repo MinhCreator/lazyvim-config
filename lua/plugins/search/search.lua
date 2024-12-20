@@ -22,19 +22,21 @@ return {
         "--glob=!**/package-lock.json",
         "--glob=!**/.",
       },
+      path_display = { 'smart' },
       prompt_prefix = "  ", --"  ",
       selection_caret = " ", --" ",
       entry_prefix = "  ",
-      initial_mode = "insert",
+      initial_mode = "insert", --"normal",
       selection_strategy = "reset",
       sorting_strategy = "ascending",
-      layout_strategy = "horizontal",
+      layout_strategy = "horizontal", --"vertical",
+      previewer = false,
       layout_config = {
         horizontal = {
-          prompt_position = "top",
+          prompt_position = "bottom", --"top",
           preview_width = 0.55,
           results_width = 0.8,
-          --mirror = false,
+          -- mirror = false,
         },
         vertical = {
           mirror = false,
@@ -44,8 +46,8 @@ return {
         preview_cutoff = 120,
       },
       winblend = 0,
-      border = {},
-      borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+      -- borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+      borderchars = { " ", "", "", "", "", "", "", "" },
       color_devicons = true,
       use_less = true,
       -- set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
@@ -83,11 +85,24 @@ return {
             "--glob=!**/yarn.lock",
             "--glob=!**/package-lock.json",
             "--glob=!**/.",
+            "!.gitignore",
           },
         },
+        lsp_code_actions = {
+          theme = 'cursor',
+
+        },
+        colorscheme = {
+          previewer = true,
+          enabled_preview = false,
+
+        },
       },
+
     },
   }),
   require("telescope").load_extension("notify"),
+
   -- require("telescope").load_extension("noice"),
+  -- require("telescope").load_extension("themes")
 }

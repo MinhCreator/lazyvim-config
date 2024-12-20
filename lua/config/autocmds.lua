@@ -3,8 +3,6 @@
 -- Add any additional autocmds here
 --vim.cmd("TwilightEnable")
 
-vim.cmd(": set cmdheight=0")
-
 local stats = require("lazy").stats()
 local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
 local msg = "⚡ Plugins loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms"
@@ -17,6 +15,7 @@ vim.fn.timer_start(math.floor(ms), function()
     vim.notify(" Happy coding!", "info", { title = "Neovim" })
   end)
 end)
-
 -- auto move {HomeDir}
 vim.cmd(": cd ~/ ")
+
+-- vim.cmd(":set autodir")

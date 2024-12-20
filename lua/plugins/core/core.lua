@@ -1,16 +1,44 @@
 return {
 
   -- add extras packages, and setup treesitter for json, json5 and jsonc
-  { import = "lazyvim.plugins.extras.lang.python" },
-  { "j-hui/fidget.nvim",                          enabled = false },
-  { "nvim-lua/popup.nvim" },
-  { "brenoprata10/nvim-highlight-colors",         lazy = true },
-  { "stevearc/conform.nvim" },
-  { "nvim-telescope/telescope-fzf-native.nvim",   build = "make", lazy = true },
-  { "mg979/vim-visual-multi",                     lazy = true },
-  { import = "lazyvim.plugins.extras.vscode" },
-  { "nvim-neotest/nvim-nio",                      lazy = true },
+  -- { import = "lazyvim.plugins.extras.lang.python" },
+  { "j-hui/fidget.nvim",                        enabled = false },
+  { "nvim-lua/popup.nvim",                      lazy = true },
+  { "stevearc/conform.nvim",                    lazy = true },
+  { "nvim-telescope/telescope-fzf-native.nvim", build = "make", lazy = true },
 
+  {
+    "mg979/vim-visual-multi",
+    lazy = true,
+    -- init = function()
+    --   vim.g.VM_mouse_mappings = 1              -- equal CTRL + Left Click on VSCODE
+    --   vim.g.VM_maps = {
+    --     ["Find Under"] = "<C-d>",              -- equal CTRL+D on VSCODE
+    --     ["Find Subword Under"] = "<C-d>",      -- equal CTRL+D on VSCODE
+    --     ["Select Cursor Down"] = "<M-C-Down>", -- equal CTRL+ALT+DOWN on VSCODE
+    --     ["Select Cursor Up"] = "<M-C-Up>",     -- equal CTRL+ALT+UP on VSCODE
+    --     ["Undo"] = "u",                        -- undo
+    --     ["Redo"] = "<C-r>",                    -- redo
+    --   }
+    -- end,
+  },
+  -- { import = "lazyvim.plugins.extras.vscode" },
+  { "nvim-neotest/nvim-nio", lazy = true },
+
+  --web devicons
+  {
+    "nvim-tree/nvim-web-devicons",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-web-devicons").setup(
+        {
+          color_icons = true,
+        }
+      )
+    end
+  },
+
+  -- Telescope
   {
     "nvim-telescope/telescope.nvim",
     lazy = true,
@@ -34,144 +62,13 @@ return {
     opts = { use_diagnostic_signs = true },
   },
 
-
-
-  -- override nvim-cmp
-  {
-    "hrsh7th/nvim-cmp",
-    lazy = true,
-    dependencies = {
-      "hrsh7th/cmp-emoji",
-      "hrsh7th/cmp-buffer",  -- buffer completions
-      "hrsh7th/cmp-path",    -- path completions
-      "hrsh7th/cmp-cmdline", -- cmdline completions
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lua",
-      "hrsh7th/cmp-calc",
-      "L3MON4D3/LuaSnip",
-    },
-
-    opts = function(_, opts)
-      opts.auto_brackets = opts.auto_brackets or {}
-      table.insert(opts.auto_brackets, "python")
-      table.insert(opts.auto_brackets, "lua")
-      table.insert(opts.auto_brackets, "json")
-      local icon_menu = require("user.icons").ui
-      local icon = require("user.icon_cmp")
-      opts.formatting = {
-        format = function(entry, vim_item)
-          -- Kind icons
-          vim_item.kind = string.format("%s %s", icon[vim_item.kind], vim_item.kind) -- This concatenates the icons with the name of the item kind
-          -- Source
-          vim_item.menu = ({
-            buffer = "(Buffer)",
-            nvim_lsp = "(LSP)",
-            luasnip = "(LuaSnip)",
-            nvim_lua = "(Lua)",
-            latex_symbols = "(LaTeX)",
-          })[entry.source.name]
-
-          if entry.source.name == "calc" then
-            vim_item.kind = icon.Calc
-            -- return vim_item
-          end
-
-          return vim_item
-        end,
-      }
-      opts.sources = {
-        { name = "nvim_lsp" },
-        { name = "lsp" },
-        { name = "buffer" },
-        { name = "path" },
-        { name = "crates" },
-        { name = "calc" },
-        -- { name = "luasnip" },
-      }
-      opts.window = {
-        completion = {
-          border = icon_menu.Border,
-          scrollbar = "",
-        },
-        documentation = {
-          border = nil, --icon_menu.Border,
-          -- scrollbar = nil,
-        },
-      }
-    end,
-  },
-  -- add more treesitter parsers
-  {
-    "nvim-treesitter/nvim-treesitter",
-    lazy = true,
-    build = ":TSUpdate",
-    event = "VeryLazy",
-
-    opts = {
-      ensure_installed = {
-        --"json",
-        "lua",
-        --"markdown",
-        --"markdown_inline",
-        "python",
-      },
-      highlight = {
-        enable = true,
-      },
-      indent = { enable = true },
-      auto_install = true, -- automatically install syntax support when entering new file type buffer
-    },
-    config = function(_, opts)
-      local configs = require("nvim-treesitter.configs")
-      configs.setup(opts)
-    end,
-  },
-
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("plugins/ui_menu.lualine")
-    end,
-  },
-  --Add linter
-  {
-    "mfussenegger/nvim-lint",
-    lazy = true,
-    event = {
-      "BufReadPre",
-      "BufNewFile",
-      "VeryLazy",
-    },
-    config = function()
-      --require("plugins/lsp.formater_and_linter")
-      --require("plugins/ui_menu.lualine")
-      local lint = require("lint")
-
-      local lint_group = vim.api.nvim_create_augroup("Linter", { clear = true })
-      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-        group = lint_group,
-        callback = function()
-          lint.try_lint()
-        end,
-      })
-    end,
-  },
-
-  --add more formater
-  {
-    "stevearc/conform.nvim",
-    -- config = function()
-    --   require("plugins/lsp.formater_and_linter")
-    -- end,
-  },
-
   -- Add lsp and formater, linter
   {
     "williamboman/mason.nvim",
     lazy = true,
     opts = {
       ensure_installed = {
+        "gdtoolkit",
         "black",
         "mypy",
         "pyright",
@@ -186,6 +83,7 @@ return {
     },
   },
 
+  -- noice.nvim
   {
     "folke/noice.nvim",
     event = "VeryLazy",
@@ -206,37 +104,58 @@ return {
     },
   },
 
-  {
-    "rcarriga/nvim-notify",
-    config = function()
-      require("plugins/ui_menu.notify")
-    end,
-  },
 
+
+  -- Add context
   {
     "nvim-treesitter/nvim-treesitter-context",
     event = "VeryLazy",
     config = function()
       require("treesitter-context").setup({
-        max_lines = 5,
+        -- max_lines = 5,
+        mode = "topline",
       })
     end,
   },
 
+  --Add highlight
   {
     "RRethy/vim-illuminate",
     event = "VeryLazy",
     config = function()
-      require("illuminate")
+      require("illuminate").configure({
+        providers = {
+          "lsp",
+          "treesitter",
+          "regex",
+        },
+        delay = 200,
+        filetypes_denylist = {
+          "dirvish",
+          "fugitive",
+          "alpha",
+          "NvimTree",
+          "packer",
+          "neogitstatus",
+          "Trouble",
+          "lir",
+          "Outline",
+          "spectre_panel",
+          "toggleterm",
+          "DressingSelect",
+          "TelescopePrompt",
+          "neo-tree",
+        },
+        under_cursor = true,
+      })
     end,
   },
 
+  --Add bracket
   {
     "windwp/nvim-autopairs",
     event = { "InsertEnter", "VeryLazy" },
-    config = function()
-      require("plugins.brackets_pair.auto_pairs")
-    end,
+
     opts = {
       fastwrap = {
         check_comma = true,
@@ -266,7 +185,7 @@ return {
       map_c_w = false,                  -- map <c-w> to delete a pair if possible
       check_ts = true,
       ts_config = {
-        python = true,
+        python = { "string", "list", "dict", "set" },
       },
       fast_wrap = {},
     },
@@ -295,6 +214,9 @@ return {
       },
     },
   },
+
+  --LSP progress
+
   {
     "linrongbin16/lsp-progress.nvim",
     lazy = true,
@@ -303,14 +225,14 @@ return {
       require("plugins/lsp.lsp_progress")
     end,
   },
+
+  -- Select virtualenv
   {
     "linux-cultist/venv-selector.nvim",
     event = "VeryLazy",
     branch = "regexp", -- Use this branch for the new version
     cmd = "VenvSelect",
-    enabled = function()
-      return LazyVim.has("telescope.nvim")
-    end,
+
     opts = {
       settings = {
         options = {
@@ -322,39 +244,49 @@ return {
     ft = "python",
     keys = { { "<leader>cv", "<cmd>:VenvSelect<cr>", desc = "Select VirtualEnv", ft = "python" } },
   },
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    lazy = true,
-    dependencies = {
-      { "nvim-lua/plenary.nvim",       lazy = true },
-      { "MunifTanjim/nui.nvim",        lazy = true },
-      { "nvim-tree/nvim-web-devicons", lazy = true },
-    },
-    opts = function()
-      --require("plugins/explorer.neo-tree").setup()
-    end,
-  },
-  {
-    "akinsho/toggleterm.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("plugins/terminal.toggleTerm")
-      -- require("toggleterm").setup()
-    end,
-  },
+
+
   --Add indent rainbow
   {
     "lukas-reineke/indent-blankline.nvim",
     event = "VeryLazy",
-    dependencies = {
-      "TheGLander/indent-rainbowline.nvim",
-    },
-    opts = function(_, opts)
-      require("indent-rainbowline").make_opts(opts, {
-        color_transparency = 0.05,
+    dependencies = { { "HiPhish/rainbow-delimiters.nvim", lazy = true, } },
+    opts = function()
+      local hooks = require "ibl.hooks"
+      local highlight = {
+        "RainbowRed",
+        "RainbowYellow",
+        "RainbowBlue",
+        "RainbowOrange",
+        "RainbowGreen",
+        "RainbowViolet",
+        "RainbowCyan",
+      }
+      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+        vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+        vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+        vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+        vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+        vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+        vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+        vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+      end)
+      vim.g.rainbow_delimiters = { highlight = highlight }
+      require("ibl").setup({
+        indent = {
+          highlight = highlight,
+          char = "▏",
+        },
+        scope = {
+          highlight = highlight,
+          -- char = "▏",
+        },
       })
+      --hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
     end,
   },
+
+  --Big file
   {
     "LunarVim/bigfile.nvim",
     lazy = true,
@@ -366,4 +298,15 @@ return {
       require("bigfile").setup(opts)
     end,
   },
+
+
+  -- Bufferline
+  {
+    'akinsho/bufferline.nvim',
+    dependencies = 'nvim-tree/nvim-web-devicons',
+    config = function()
+      require("plugins/ui_menu.bufferline")
+    end,
+  },
+
 }

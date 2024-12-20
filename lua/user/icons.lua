@@ -35,7 +35,7 @@ return {
     Package = "",
     Property = "󰜢",
     Reference = "󰈇",
-    Snippet = "",
+    Snippet = " ",
     String = "󰉿",
     Struct = "󰙅",
     Supermaven = "",
@@ -252,3 +252,4 @@ return {
     CircuitBoard = "",
   },
 }
+

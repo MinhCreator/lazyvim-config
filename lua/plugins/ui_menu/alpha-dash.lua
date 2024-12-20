@@ -182,7 +182,7 @@ return {
     dashboard.section.footer.opts.hl = "AlphaFooter"
     dashboard.section.footer.val = footer()
     --dashboard.section.footer.opts.hl = "Constant"
-    dashboard.opts.layout[1].val = 3
+    dashboard.opts.layout[1].val = 2 --3
     return dashboard
   end,
   config = function(_, dashboard)

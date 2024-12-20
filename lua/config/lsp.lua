@@ -121,6 +121,12 @@ local custom_attach = function(client, bufnr)
     local msg = string.format("Language server %s started!", client.name)
     vim.notify(msg, vim.log.levels.DEBUG, { title = "Nvim-config" })
   end
+
+  local navic = require("nvim-navic")
+
+  navic.attach(client, bufnr)
+
+  -- navic.custom_attach(client, bufnr)
 end
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -131,7 +137,40 @@ capabilities.textDocument.foldingRange = {
 }
 
 local lspconfig = require("lspconfig")
+-- gdscript language server
 
+local gdscript_config = {
+  on_attach = custom_attach,
+  capabilities = capabilities,
+  settings = {}
+}
+if vim.fn.has 'win32' == 1 then
+  -- Windows specific. Requires nmap installed (`winget install nmap`)
+  gdscript_config['cmd'] = { "ncat", "127.0.0.1", os.getenv("GDScript_Port") or "6005" }
+end
+
+lspconfig.gdscript.setup(gdscript_config)
+
+-- gdshader language server
+lspconfig.gdshader.setup({
+  on_attach = custom_attach,
+  capabilities = capabilities,
+  settings = {
+    gdscript = {
+      enable = true,
+      plugins = {
+        gdtoolkit = {
+          enable = true
+        },
+      },
+    },
+    gdshader = {
+      enable = true
+    },
+  }
+})
+
+-- pyright language server
 lspconfig.pyright.setup({
   on_attach = custom_attach,
   settings = {
@@ -164,18 +203,36 @@ lspconfig.pyright.setup({
   },
   capabilities = capabilities,
 })
---else
---vim.notify("pylsp not found!", vim.log.levels.WARN, { title = "Nvim-config" })
---end
 
---if utils.executable("pyright") then
---  lspconfig.pyright.setup({
---    on_attach = custom_attach,
---    capabilities = capabilities,
---  })
---else
---  vim.notify("pyright not found!", vim.log.levels.WARN, { title = "Nvim-config" })
---end
+if utils.executable("ruff_lsp") then
+  lspconfig.ruff_lsp.setup({
+
+    on_attach = custom_attach,
+
+    capabilities = capabilities,
+
+  })
+else
+  vim.notify("ruff_lsp not found!", vim.log.levels.WARN, { title = "Nvim-config" })
+end
+
+if utils.executable("pylsp") then
+  lspconfig.pylsp.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+  })
+else
+  vim.notify("pylsp not found!", vim.log.levels.WARN, { title = "Nvim-config" })
+end
+
+if utils.executable("pyright") then
+  lspconfig.pyright.setup({
+    on_attach = custom_attach,
+    capabilities = capabilities,
+  })
+else
+  vim.notify("pyright not found!", vim.log.levels.WARN, { title = "Nvim-config" })
+end
 
 if utils.executable("lua-language-server") then
   -- settings for lua-language-server can be found on https://github.com/LuaLS/lua-language-server/wiki/Settings .
@@ -191,7 +248,8 @@ if utils.executable("lua-language-server") then
     },
     capabilities = capabilities,
   })
-
+else
+  vim.notify("lua_lsp not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
 
@@ -200,40 +258,21 @@ end
 fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
 fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
 fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
-fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
-
+fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
 
 
 diagnostic.config({
-  underline = true,
+  underline = false,
   virtual_text = true,
-  signs = true,
+  signs = true, --{active = signs,},
+  -- update_in_insert = true,
   severity_sort = true,
-  float = { border = "single" },
+  float = {
+    focusable = false,
+    style = "minimal",
+    -- border = "rounded",
+    source = "always",
+    -- header = "",
+    -- prefix = ""
+  }, --"single" },
 })
-
--- global config for diagnostic
--- diagnostic.config = function()
--- local x = vim.diagnostic.severity
---
--- vim.diagnostic.config {
--- virtual_text = { prefix = "" },
--- signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
--- underline = true,
--- float = { border = "single" },
--- }
---
--- local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
--- function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
--- opts = opts or {}
--- opts.border = "rounded"
--- return orig_util_open_floating_preview(contents, syntax, opts, ...)
--- end
--- end
-
--- lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
---   underline = false,
---   virtual_text = false,
---   signs = true,
---   update_in_insert = false,
--- })

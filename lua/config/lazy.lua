@@ -14,29 +14,31 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
 local icons = require("user.icons").ui
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
-    { "LazyVim/LazyVim",                      import = "lazyvim.plugins" },
-    { import = "plugins/autocomplete_cmdline" },
+    { "LazyVim/LazyVim",                 import = "lazyvim.plugins" },
+    { "MinhCreator/LazyVim",             import = "lazyvim.plugins" },
+    { import = "plugins" },
+    { import = "plugins/autocomplete" },
     { import = "plugins/color_theme" },
+    { import = "plugins/comment" },
     { import = "plugins/core" },
     { import = "plugins/disable_plugins" },
-    { import = "plugins/ui_menu" },
-    { import = "plugins/search" },
+    { import = "plugins/explorer" },
+    { import = "plugins/icon" },
     { import = "plugins/lang" },
     { import = "plugins/lsp" },
+    { import = "plugins/search" },
+    { import = "plugins/terminal" },
     { import = "plugins/todo_comment" },
-    { import = "plugins/comment" },
-    { import = "plugins/explorer" },
-    { import = "plugins/lang" },
-    { import = "plugins/icon" },
-
+    { import = "plugins/treesitter" },
+    { import = "plugins/ui_menu" },
+    { import = "plugins/debug_adapter" },
     -- import theme and custom plugin configs
   },
-  --install = { colorscheme = {} },
+  -- install = { colorscheme = {"onedark"} },
 
   -- automatically check for plugin updates
   checker = {
@@ -44,7 +46,6 @@ require("lazy").setup({
     notify = true,   -- notify on update
   },
   --change_detection = { enabled = false },
-
   ui = {
     icons = {
       ft = icons.ft,                 --"",
@@ -72,6 +73,3 @@ require("lazy").setup({
     },
   },
 })
-
-
-
